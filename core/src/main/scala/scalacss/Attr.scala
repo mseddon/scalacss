@@ -77,7 +77,7 @@ object Attr {
    * and attributes can have recursive definitions.
    */
   object AliasB {
-    @inline def apply(h: Attr, t: Attr*) = NonEmptyVector(h, t: _*)
+     def apply(h: Attr, t: Attr*) = NonEmptyVector(h, t: _*)
   }
 }
 

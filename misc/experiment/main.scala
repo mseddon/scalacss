@@ -110,7 +110,7 @@ object Test {
   type Warning = String
 
   case class Merger(f: (KVs, KV) => (List[KV], List[Warning])) {
-    @inline def apply(lo: KVs, hi: KV) = f(lo, hi)
+     def apply(lo: KVs, hi: KV) = f(lo, hi)
     def and(m: Merger): Merger = ??? // TODO make semigroup
     // def map (g: EndoFn[List[KV]]) = Merger((lo,hi) => f(lo,hi) map1 g)
     // def mapW(g: EndoFn[List[Warning]]) = Merger((lo,hi) => f(lo,hi) map2 g)

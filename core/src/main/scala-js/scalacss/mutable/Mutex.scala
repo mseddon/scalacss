@@ -8,7 +8,7 @@ package scalacss.mutable
 
 
 final class Mutex {
-  @inline def apply[A](f: => A): A = f
+   def apply[A](f: => A): A = f
 }
 
 object Mutex {

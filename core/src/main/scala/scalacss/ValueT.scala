@@ -13,7 +13,7 @@ trait ToAV {
  * A CSS value that is valid for some context `T`.
  */
 final case class ValueT[T <: ValueT.ValueClass](value: Value) {
-  @inline def retype[A <: ValueT.ValueClass] = this.asInstanceOf[ValueT[A]]
+   def retype[A <: ValueT.ValueClass] = this.asInstanceOf[ValueT[A]]
 }
 
 object ValueT {
@@ -25,7 +25,7 @@ object ValueT {
     else
       s"'$s'"
 
-  @inline def mkStrings(a: String, sep: String, b: String): Value =
+   def mkStrings(a: String, sep: String, b: String): Value =
     mkString(a) + sep + mkString(b)
 
   /*
@@ -86,30 +86,30 @@ object ValueT {
         override def apply(x: From): ValueT[To] = f(x)
       }
 
-    @inline def retype[FromT <: ValueClass, To <: ValueClass]: FromT >=> To =
+     def retype[FromT <: ValueClass, To <: ValueClass]: FromT >=> To =
       applyT(_.retype)
 
-    @inline def literal[L <: Literal, To <: ValueClass]: L ==> To =
+     def literal[L <: Literal, To <: ValueClass]: L ==> To =
       apply(_.value)
   }
 
   object Rules extends Rules
   abstract class Rules {
-    @inline implicit def ruleApply[From, To <: ValueClass](f: From)(implicit r: From ==> To): ValueT[To] =
+     implicit def ruleApply[From, To <: ValueClass](f: From)(implicit r: From ==> To): ValueT[To] =
       r(f)
 
-    @inline implicit def ruleChain[A, B <: ValueClass, C <: ValueClass](implicit ab: A ==> B, bc: B >=> C): A ==> C =
+     implicit def ruleChain[A, B <: ValueClass, C <: ValueClass](implicit ab: A ==> B, bc: B >=> C): A ==> C =
       ab >> bc
 
-    @inline implicit def ruleAnywhere[L <: Literal with LT.Anywhere, To <: ValueClass]: L ==> To =
+     implicit def ruleAnywhere[L <: Literal with LT.Anywhere, To <: ValueClass]: L ==> To =
       Rule.literal
 
-    @inline implicit def ruleLen_L[N] : Len     <== Length[N]      = Rule(_.value)
-    @inline implicit def rulePct_P[N] : Pct     <== Percentage[N]  = Rule(_.value)
-    @inline implicit def ruleInteger_I: Integer <== Int            = Rule(_.toString)
-    @inline implicit def ruleNumber_I : Number  <== Int            = Rule(_.toString)
-    @inline implicit def ruleNumber_D : Number  <== Double         = Rule(_.toString)
-    @inline implicit def ruleTime_FD  : Time    <== FiniteDuration =
+     implicit def ruleLen_L[N] : Len     <== Length[N]      = Rule(_.value)
+     implicit def rulePct_P[N] : Pct     <== Percentage[N]  = Rule(_.value)
+     implicit def ruleInteger_I: Integer <== Int            = Rule(_.toString)
+     implicit def ruleNumber_I : Number  <== Int            = Rule(_.toString)
+     implicit def ruleNumber_D : Number  <== Double         = Rule(_.toString)
+     implicit def ruleTime_FD  : Time    <== FiniteDuration =
       Rule(d => d.unit match {
         case TimeUnit.MICROSECONDS
            | TimeUnit.MILLISECONDS
@@ -117,27 +117,27 @@ object ValueT {
         case _                    => d.toSeconds + "s"
       })
 
-    @inline implicit def ruleLenPct_L                               : LenPct     <=< Len          = Rule.retype
-    @inline implicit def ruleLenPct_P                               : LenPct     <=< Pct          = Rule.retype
-    @inline implicit def ruleLenPctAuto_LP                          : LenPctAuto <=< LenPct       = Rule.retype
-    @inline implicit def ruleLenPctAuto_A                           : LenPctAuto <== LT.auto.type = Rule.literal
-    @inline implicit def ruleLenPctNum_LP                           : LenPctNum  <=< LenPct       = Rule.retype
-    @inline implicit def ruleLenPctNum_N                            : LenPctNum  <=< Number       = Rule.retype
-    @inline implicit def ruleBrWidth_1                              : BrWidth    <=< Len          = Rule.retype
-    @inline implicit def ruleBrWidth_2[L <: Literal with LT.BrWidth]: BrWidth    <== L            = Rule.literal
-    @inline implicit def ruleBrStyle_L[L <: Literal with LT.BrStyle]: BrStyle    <== L            = Rule.literal
-    @inline implicit def ruleWidStyCol_W                            : WidStyCol  <=< BrWidth      = Rule.retype
-    @inline implicit def ruleWidStyCol_S                            : WidStyCol  <=< BrStyle      = Rule.retype
-    @inline implicit def ruleWidStyCol_C                            : WidStyCol  <=< Color        = Rule.retype
+     implicit def ruleLenPct_L                               : LenPct     <=< Len          = Rule.retype
+     implicit def ruleLenPct_P                               : LenPct     <=< Pct          = Rule.retype
+     implicit def ruleLenPctAuto_LP                          : LenPctAuto <=< LenPct       = Rule.retype
+     implicit def ruleLenPctAuto_A                           : LenPctAuto <== LT.auto.type = Rule.literal
+     implicit def ruleLenPctNum_LP                           : LenPctNum  <=< LenPct       = Rule.retype
+     implicit def ruleLenPctNum_N                            : LenPctNum  <=< Number       = Rule.retype
+     implicit def ruleBrWidth_1                              : BrWidth    <=< Len          = Rule.retype
+     implicit def ruleBrWidth_2[L <: Literal with LT.BrWidth]: BrWidth    <== L            = Rule.literal
+     implicit def ruleBrStyle_L[L <: Literal with LT.BrStyle]: BrStyle    <== L            = Rule.literal
+     implicit def ruleWidStyCol_W                            : WidStyCol  <=< BrWidth      = Rule.retype
+     implicit def ruleWidStyCol_S                            : WidStyCol  <=< BrStyle      = Rule.retype
+     implicit def ruleWidStyCol_C                            : WidStyCol  <=< Color        = Rule.retype
 
     // diverging implicit expansion requires these ↙ :(
-    @inline implicit def ruleWidStyCol_L : WidStyCol  <=< Len = Rule.retype
-    @inline implicit def ruleWidStyCol_P : WidStyCol  <=< Pct = Rule.retype
-    @inline implicit def ruleLenPctNum_I : LenPctNum  <== Int = Rule(_.toString)
-    @inline implicit def ruleLenPctNum_L : LenPctNum  <=< Len = Rule.retype
-    @inline implicit def ruleLenPctNum_P : LenPctNum  <=< Pct = Rule.retype
-    @inline implicit def ruleLenPctAuto_L: LenPctAuto <=< Len = Rule.retype
-    @inline implicit def ruleLenPctAuto_P: LenPctAuto <=< Pct = Rule.retype
+     implicit def ruleWidStyCol_L : WidStyCol  <=< Len = Rule.retype
+     implicit def ruleWidStyCol_P : WidStyCol  <=< Pct = Rule.retype
+     implicit def ruleLenPctNum_I : LenPctNum  <== Int = Rule(_.toString)
+     implicit def ruleLenPctNum_L : LenPctNum  <=< Len = Rule.retype
+     implicit def ruleLenPctNum_P : LenPctNum  <=< Pct = Rule.retype
+     implicit def ruleLenPctAuto_L: LenPctAuto <=< Len = Rule.retype
+     implicit def ruleLenPctAuto_P: LenPctAuto <=< Pct = Rule.retype
   }
 
 
@@ -175,11 +175,11 @@ object ValueT {
 //        final def apply[From](f: From)(implicit r: From ==> T): AV = av(r(f).value)
   }
 
-  @inline private[scalacss] def concat(sep: String, a: ValueT[_], b: ValueT[_]): Value =
+   private[scalacss] def concat(sep: String, a: ValueT[_], b: ValueT[_]): Value =
     a.value + sep + b.value
-  @inline private[scalacss] def concat(sep: String, a: ValueT[_], b: ValueT[_], c: ValueT[_]): Value =
+   private[scalacss] def concat(sep: String, a: ValueT[_], b: ValueT[_], c: ValueT[_]): Value =
     concat(sep, a, b) + sep + c.value
-  @inline private[scalacss] def concat(sep: String, a: ValueT[_], b: ValueT[_], c: ValueT[_], d: ValueT[_]): Value =
+   private[scalacss] def concat(sep: String, a: ValueT[_], b: ValueT[_], c: ValueT[_], d: ValueT[_]): Value =
     concat(sep, a, b, c) + sep + d.value
 
   abstract class TypedAttrT2[T <: ValueClass] extends TypedAttrBase {

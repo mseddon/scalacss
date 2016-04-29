@@ -87,7 +87,7 @@ package object scalacss {
   }
 
   /** Faster than Vector(a) */
-  @inline private[scalacss] def Vector1[A](a: A): Vector[A] =
+   private[scalacss] def Vector1[A](a: A): Vector[A] =
     Vector.empty :+ a
 
   /**

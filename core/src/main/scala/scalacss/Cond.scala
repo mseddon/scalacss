@@ -14,7 +14,7 @@ final case class Cond(pseudo: Option[Pseudo], mediaQueries: Vector[Media.Query])
   protected def addPseudo(p: Pseudo): Cond =
     copy(pseudo = Some(this.pseudo.fold(p)(_ & p)))
 
-  @inline def &(p: Pseudo): Cond =
+   def &(p: Pseudo): Cond =
     addPseudo(p)
 
   def &(q: Media.Query): Cond =

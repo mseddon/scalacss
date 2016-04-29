@@ -20,7 +20,7 @@ object Gen {
             .map      (r4.replaceAllIn(_, ""))
             .filter   (r5.matcher(_).matches)
             .sorted
-            .map(a => s"  @inline final def $a = Attrs.$a")
+            .map(a => s"   final def $a = Attrs.$a")
         val attrAliases =
         s"""
           |package scalacss

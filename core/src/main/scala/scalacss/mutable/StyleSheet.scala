@@ -36,13 +36,13 @@ object StyleSheet {
     protected object dsl extends DslBase {
       override def styleS(t: ToStyle*)(implicit c: Compose) = Dsl.style(t: _*)
 
-      @inline final def ^ = Literal
+       final def ^ = Literal
 
-      @inline final def Color(literal: String) = scalacss.Color(literal)
+       final def Color(literal: String) = scalacss.Color(literal)
 
-      @inline implicit final def toCondOps[C <% Cond](x: C) = new CondOps(x)
+       implicit final def toCondOps[C <% Cond](x: C) = new CondOps(x)
       final class CondOps(val cond: Cond) {
-        @inline def - = new DslCond(cond, dsl)
+         def - = new DslCond(cond, dsl)
       }
     }
 
@@ -84,7 +84,7 @@ object StyleSheet {
   abstract class Standalone(protected implicit val register: Register) extends Base {
     import dsl._
 
-    @inline protected final implicit class RootStringOps(val sel: CssSelector) extends Pseudo.ChainOps[RootStringOps] {
+     protected final implicit class RootStringOps(val sel: CssSelector) extends Pseudo.ChainOps[RootStringOps] {
       override protected def addPseudo(p: Pseudo): RootStringOps =
         new RootStringOps(p modSelector sel)
 
@@ -110,10 +110,10 @@ object StyleSheet {
         styleS(unsafeChild(sel)(t: _*))
     }
 
-    @inline final protected def & : Cond = Cond.empty
+     final protected def & : Cond = Cond.empty
 
     /** Create a child style. */
-    @inline final protected def &(sel: CssSelector): NestedStringOps = new NestedStringOps(sel)
+     final protected def &(sel: CssSelector): NestedStringOps = new NestedStringOps(sel)
   }
 
 
@@ -130,7 +130,7 @@ object StyleSheet {
     import dsl._
 
             final protected type Domain[A] = scalacss.Domain[A]
-    @inline final protected def  Domain    = scalacss.Domain
+     final protected def  Domain    = scalacss.Domain
 
     override protected def __macroStyle (name: String) = new MStyle (name)
     override protected def __macroStyleF(name: String) = new MStyleF(name)
@@ -157,7 +157,7 @@ object StyleSheet {
     protected def styleC[M <: HList](s: StyleC)(implicit m: Mapper.Aux[register._registerC.type, s.S, M], u: MkUsage[M]): u.Out =
       register.registerC(s)(implicitly, m, u)
 
-    @inline final protected def & : Cond = Cond.empty
+     final protected def & : Cond = Cond.empty
 
     /**
      * Objects in Scala are lazy. If you put styles in inner objects you need to make sure they're initialised before

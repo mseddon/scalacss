@@ -72,7 +72,7 @@ final class Register(initNameGen: NameGen, macroName: MacroName, errHandler: Err
     // Optional side-effects for warnings
     errHandler.warn.foreach { f =>
 
-      @inline def warn(s: String): Unit =
+       def warn(s: String): Unit =
         f(cn, Warning(Cond.empty, s))
 
       if (_rendered)

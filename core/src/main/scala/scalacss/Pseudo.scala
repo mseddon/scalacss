@@ -47,7 +47,7 @@ sealed abstract class Pseudo extends Pseudo.ChainOps[Pseudo]  {
       case (Composite(a, b), Composite(c, d)) => Composite(a, b union d insert c)
     }
 
-  @inline final def &(p: Pseudo): Pseudo =
+   final def &(p: Pseudo): Pseudo =
     addPseudo(p)
 
   def contains(p: Pseudo1): Boolean
