@@ -187,13 +187,9 @@ object Typical {
 
   def publicationSettings(ghProject: String): PE =
     _.settings(
-      publishTo := {
-        val nexus = "https://oss.sonatype.org/"
-        if (isSnapshot.value)
-          Some("snapshots" at nexus + "content/repositories/snapshots")
-        else
-          Some("releases"  at nexus + "service/local/staging/deploy/maven2")
-      },
+      credentials += Credentials(Path.userHome / ".ivy2" / ".credentials"),
+      resolvers += "NextWave Repo" at "http://maxdevmaster.cloudapp.net:4343/artifactory/nxtwv-maven/",
+      publishTo := Some("NextWave Repo" at "http://maxdevmaster.cloudapp.net:4343/artifactory/nxtwv-maven/"),
       pomExtra :=
         <scm>
           <connection>scm:git:github.com/japgolly/{ghProject}</connection>
